@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Editable Table</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <table id="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Student Name</th>
+        <th>Student Roll</th>
+        <th>Subject</th>
+        <th>Marks</th>
+        <th>Marked By</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Existing table rows will be added here -->
+    </tbody>
+  </table>
+
+  <button id="add-row-button">Create a new row</button>
+  <button id="save-button">Save</button>
+
+  <script>
+    // Define an array to store the table data
+    const tableData = [];
+
+    // Function to create a new row and append it to the table
+    function addNewRow() {
+      const newRow = document.createElement('tr'); // Create a new table row element
+      newRow.innerHTML = `
+        <td class="cell-id">...</td>
+        <td><input type="text" class="cell-student-name"></td>
+        <td><input type="text" class="cell-student-roll"></td>
+        <td><input type="text" class="cell-subject"></td>
+        <td><input type="number" class="cell-marks"></td>
+        <td><input type="email" class="cell-marked-by"></td>
+      `; // Add input fields for each cell in the new row
+      const tbody = document.querySelector('#table tbody');
+      tbody.appendChild(newRow); // Append the new row to the table
+    }
+
+    // Function to save the new row to the tableData array
+    function saveNewRow() {
+      const newRow = {}; // Create a new object to hold the data for the new row
+
+      // Validate the input fields for each cell in the new row
+      const studentName = document.querySelector('.cell-student-name').value;
+      const studentRoll = document.querySelector('.cell-student-roll').value;
+      const subject = document.querySelector('.cell-subject').value;
+      const marks = document.querySelector('.cell-marks').value;
+      const markedBy = document.querySelector('.cell-marked-by').value;
+
+      if (!studentName || !studentRoll || !subject || !marks || !markedBy) {
+        alert('Please fill in all input fields.'); // Display an error message if any input fields are empty
+        return;
+      }
+
+      if (isNaN(marks) || marks < 0 || marks > 100) {
+        alert('Please enter a valid number for the "marks" field.'); // Display an error message if the "marks" field is invalid
+        return;
+      }
+
+      newRow.id = tableData.length + 1; // Assign a new ID to the new row
+      newRow.student_name = studentName;
+      newRow.student_roll = studentRoll;
+      newRow.subject = subject;
+      newRow.marks = marks;
+      newRow.markedBy = markedBy;
+
+      tableData.push(newRow); // Add the new row to the tableData array
+      console.log('New row:', newRow);
+      console.log('tableData:', tableData);
+      resetTable(); // Reset the table to its initial state
+    }
+    // Function to reset the table to its initial state
+    function resetTable() {
+      const tbody = document.querySelector('#table tbody');
+      tbody.innerHTML = ''; // Remove all existing table rows
+
+      // Loop through the tableData array and add each row to the table
+      tableData.forEach(row => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+      <td class="cell-id">${row.id}</td>
+      <td><input type="text" class="cell-student-name" value="${row.student_name}"></td>
+      <td><input type="text" class="cell-student-roll" value="${row.student_roll}"></td>
+      <td><input type="text" class="cell-subject" value="${row.subject}"></td>
+      <td><input type="number" class="cell-marks" value="${row.marks}"></td>
+      <td><input type="email" class="cell-marked-by" value="${row.markedBy}"></td>
+    `;
+        tbody.appendChild(newRow);
+      });
+    }
+
+    // Add an event listener to the "Create a new row" button
+    const addRowButton = document.querySelector('#add-row-button');
+    addRowButton.addEventListener('click', addNewRow);
+
+    // Add an event listener to the "Save" button
+    const saveButton = document.querySelector('#save-button');
+    saveButton.addEventListener('click', saveNewRow);
+
+    // Reset the table to its initial state when the page loads
+    resetTable();
+
+    </script>
+
+    </body>
+    </html>
